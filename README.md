@@ -2,9 +2,9 @@
 
 ## OASIS-3 Data Preprocessing Pipeline:
 
-Preprocessing pipeline for a 210-subject OASIS-3 cohort, extracting anatomically-defined ROIs from MRI and PET for a ROI-based multimodal Mamba model predicting CN→MCI/AD conversion.
+Preprocessing pipeline for a 210-subject OASIS-3 cohort, extracting anatomically-defined ROIs from MRI and PET for a ROI-based multimodal Mamba model predicting CN to MCI/AD conversion.
 
-This pipeline's subject selection, dataset conventions, and evaluation setup follow Vo, J., Sharif, N., & Hassan, G.M. (2025). "MNA-net: Multimodal Neuroimaging Attention-Based Architecture for Cognitive Decline Prediction." PRIME 2024, LNCS 15155, pp. 86–98, the closest prior work predicting CN→MCI/AD conversion on OASIS-3 with MRI+PET, and the baseline this project is benchmarked against.
+This pipeline's subject selection, dataset conventions, and evaluation setup follow Vo, J., Sharif, N., & Hassan, G.M. (2025). "MNA-net: Multimodal Neuroimaging Attention-Based Architecture for Cognitive Decline Prediction." PRIME 2024, LNCS 15155, pp. 86–98, the closest prior work predicting CN to MCI/AD conversion on OASIS-3 with MRI+PET, and the baseline this project is benchmarked against.
 
 The choice to use anatomically-defined ROIs rather than whole-brain volumes is grounded in Khan, I.J. et al. (2025). "Enhanced ROI guided deep learning model for Alzheimer's detection using 3D MRI images." Informatics in Medicine Unlocked, vol. 56, 101650.
 
@@ -36,7 +36,7 @@ Extracts the same 6 ROIs from registered PET volumes, reusing the MRI-derived se
 
 ### 7. PET_Augmentation.ipynb
 
-Generates matching augmented copies for PET, mirroring the MRI augmentation exactly — same rotation range, same seeds, same training-only subject split — so both modalities have equal 4× training-set sizes for multimodal fusion. MRI and PET are augmented independently (not with a shared per-subject transform), which is fine since the multimodal model uses two separate encoder branches (late fusion).
+Generates matching augmented copies for PET, mirroring the MRI augmentation exactly — same rotation range, same seeds, same training-only subject split — so both modalities have equal 4× training-set sizes for multimodal fusion.
 
 ### 8. PET_ROI_Images.ipynb (QA/visualisation)
 
