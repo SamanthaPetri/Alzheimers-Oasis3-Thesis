@@ -44,9 +44,12 @@ Visual sanity checks: plots individual PET ROIs to confirm anatomically sensible
 
 ### Output data cache structure
 
-preprocessed_cache_roi64/       MRI ROIs, originals only        (6, 64, 64, 64) per subject
-preprocessed_cache_roi64_aug/   MRI ROIs, originals + augmented (train subjects only)
-preprocessed_cache_pet/         PET ROIs, originals only
-preprocessed_cache_pet_aug/     PET ROIs, originals + augmented (train subjects only)
+| Cache Directory                 | Contents                                                           | Output Shape                  |
+| ------------------------------- | ------------------------------------------------------------------ | ----------------------------- |
+| `preprocessed_cache_roi64/`     | MRI ROIs, original scans only                                      | `(6, 64, 64, 64)` per subject |
+| `preprocessed_cache_roi64_aug/` | MRI ROIs, originals plus augmented data for training subjects only | `(6, 64, 64, 64)` per subject |
+| `preprocessed_cache_pet/`       | PET ROIs, original scans only                                      | —                             |
+| `preprocessed_cache_pet_aug/`   | PET ROIs, originals plus augmented data for training subjects only | —                             |
+
 
 ## Mamba Prediction Model Pipeline:
