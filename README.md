@@ -8,6 +8,12 @@ This pipeline's subject selection, dataset conventions, and evaluation setup fol
 
 The choice to use anatomically-defined ROIs rather than whole-brain volumes is grounded in Khan, I.J. et al. (2025). "Enhanced ROI guided deep learning model for Alzheimer's detection using 3D MRI images." Informatics in Medicine Unlocked, vol. 56, 101650.
 
+### Prerequisites
+
+FastSurfer — MRI segmentation (step 3 below). https://github.com/Deep-MI/FastSurfer
+
+FSL (FMRIB Software Library) — provides flirt and fslmaths, used for PET averaging and registration (step 5 below). Requires a Linux/WSL environment. https://fsl.fmrib.ox.ac.uk/fsl/docs/#/
+
 Run scripts/notebooks in the order below:
 
 ### 1. thesis_cohort_final.csv
@@ -18,38 +24,42 @@ Cohort definition for all 210 subjects: subject_id, baseline_day, conversion_day
 
 Verifies each subject has a PIB PET scan within 30 days of their target pet_day, matching against the raw PET scan directory. Reports exact matches, close matches (≤30 days), and subjects with no usable PET scan. Verification only — produces no output files.
 
-### 3. convert_all_mgz.py
+### 3. FastSurfer
 
-Converts FastSurfer's orig.mgz output to orig.nii.gz for each subject. Required before PET registration, since FLIRT (step 4) needs a NIfTI reference volume, not MGZ.
+MRI segmentation, run per subject via FastSurfer's own pipeline (not included here). Produces FastSurfer_output/{mri_session}/mri/orig.mgz and aparc.DKTatlas+aseg.deep.mgz. Every later step in this pipeline depends on this output existing first
 
-### 4. register_all_pet_v2.sh
+### 4. convert_all_mgz.py
 
-Averages each subject's PET frames (fslmaths -Tmean) then rigidly registers the averaged PET volume onto the subject's MRI space (flirt, 6 degrees of freedom) using FastSurfer's orig.nii.gz as the reference. Outputs {subject_id}_PIB_in_MRI.nii.gz plus the transform matrix.
+Converts FastSurfer's orig.mgz output to orig.nii.gz for each subject. Required before PET registration, since FLIRT (step 5) needs a NIfTI reference volume, not MGZ.
 
-### 5. MRI_Extraction.ipynb
+### 5. register_all_pet_v2.sh
+
+Requires FSL installed (see Prerequisites above). Averages each subject's PET frames (fslmaths -Tmean) then rigidly registers the averaged PET volume onto the subject's MRI space (flirt, 6 degrees of freedom) using FastSurfer's orig.nii.gz as the reference. Outputs {subject_id}_PIB_in_MRI.nii.gz plus the transform matrix.
+
+### 6. MRI_Extraction.ipynb
 
 Extracts 6 anatomically-defined ROIs (bilateral hippocampus, cerebellum WM, cerebral WM) from FastSurfer-segmented MRI. Pipeline: mask ROI from segmentation → tight crop (+3 voxel padding) → z-score normalise (ROI voxels only) → resize to 64×64×64 → cache as .npy. Also generates 3 augmented copies (random rotation ±15°, random flips) per training-subject only, using seeds [1, 101, 42].
 
-### 6. extract_pet_rois.py
+### 7. extract_pet_rois.py
 
 Extracts the same 6 ROIs from registered PET volumes, reusing the MRI-derived segmentation masks (PET has no reliable anatomical detail of its own to segment on). Same crop → normalise → resize-to-64³ pipeline as MRI, so PET and MRI caches stay dimensionally consistent for later fusion.
 
-### 7. PET_Augmentation.ipynb
+### 8. PET_Augmentation.ipynb
 
 Generates matching augmented copies for PET, mirroring the MRI augmentation exactly — same rotation range, same seeds, same training-only subject split — so both modalities have equal 4× training-set sizes for multimodal fusion.
 
-### 8. PET_ROI_Images.ipynb (QA/visualisation)
+### 9. PET_ROI_Images.ipynb
 
 Visual sanity checks: plots individual PET ROIs to confirm anatomically sensible extraction, checks cache completeness/shape consistency across all 210 subjects, and includes a minimal end-to-end multimodal dataloader test.
 
 ### Output data cache structure
 
-| Cache Directory                 | Contents                                                           | Output Shape                  |
-| ------------------------------- | ------------------------------------------------------------------ | ----------------------------- |
-| `preprocessed_cache_roi64/`     | MRI ROIs, original scans only                                      | `(6, 64, 64, 64)` per subject |
+| Cache Directory                 | Contents                                                            | Output Shape                  |
+| -------------------------------- | -------------------------------------------------------------------- | ------------------------------ |
+| `preprocessed_cache_roi64/`     | MRI ROIs, original scans only                                       | `(6, 64, 64, 64)` per subject |
 | `preprocessed_cache_roi64_aug/` | MRI ROIs, originals plus augmented data for training subjects only | `(6, 64, 64, 64)` per subject |
-| `preprocessed_cache_pet/`       | PET ROIs, original scans only                                      | —                             |
-| `preprocessed_cache_pet_aug/`   | PET ROIs, originals plus augmented data for training subjects only | —                             |
+| `preprocessed_cache_pet/`       | PET ROIs, original scans only                                       | `(6, 64, 64, 64)` per subject |
+| `preprocessed_cache_pet_aug/`   | PET ROIs, originals plus augmented data for training subjects only | `(6, 64, 64, 64)` per subject |
 
 
 ## Mamba Prediction Model Pipeline:
