@@ -1,6 +1,4 @@
-# Alzheimers Prediction Using Oasis-3 Dataset
-
-## OASIS-3 Data Preprocessing Pipeline:
+# OASIS-3 Data Preprocessing Pipeline:
 
 Preprocessing pipeline for a 210-subject OASIS-3 cohort, extracting anatomically-defined ROIs from MRI and PET for a ROI-based multimodal Mamba model predicting CN to MCI/AD conversion.
 
