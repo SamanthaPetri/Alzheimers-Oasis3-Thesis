@@ -85,8 +85,7 @@ Full version history, references, and result-by-result reasoning in `Models/READ
 |---|---|---|---|
 | MRI-only | 68.3% ± 2.7% | 63.5% ± 7.3% | 73.0% ± 2.7% |
 | PET-only | 62.7% ± 5.0% | 68.3% ± 12.0% | 57.1% ± 4.8% |
-| Multimodal (joint-trained) | 65.1% ± 1.4% | 58.7% ± 5.5% | 71.4% ± 4.8% |
-| Multimodal (probability fusion) | 67.5% ± 3.6% | 71.4% ± 4.8% | 63.5% ± 7.3% |
+| Multimodal | 65.1% ± 1.4% | 58.7% ± 5.5% | 71.4% ± 4.8% |
 | MRI-only + ROI stats | 65.1% ± 1.4% | 71.4% ± 0.0% | 58.7% ± 2.8% |
 | PET-only + ROI stats | 66.7% ± 2.4% | 66.7% ± 0.0% | 66.7% ± 4.8% |
 | Hippocampus pair only | 56.3% ± 7.3% | 60.3% ± 12.0% | 52.4% ± 12.6% |
