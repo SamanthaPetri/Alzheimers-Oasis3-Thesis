@@ -149,3 +149,60 @@ Same v3/v4 `VMamba` backbone; `d_model` raised back to 64 (single-seed test).
 - Zhang et al. (2017), *Understanding Deep Learning Requires Rethinking Generalization* (ICLR)
 
 ---
+
+## Results
+
+All 3-seed results use seeds `[1, 7, 123]`, reported as mean ± sample standard deviation (ddof=1). v5 is single-seed (seed 1).
+
+### Reference Baselines
+
+| Configuration | Accuracy | Sensitivity (TPR) | Specificity (TNR) |
+|---|---|---|---|
+| MNA-net (Vo et al.) | 82.9% | 85.7% | 80.0% |
+| Appendix B — Whole-brain trial (CNN-Mamba hybrid) | 62.4% | — | — |
+| Appendix B — ROIStatsMamba (CNN-Mamba hybrid, MRI-only) | ~72.0% | ~76.0% | ~69.0% |
+
+### v4 — Baseline
+
+| Configuration | Accuracy | Sensitivity (TPR) | Specificity (TNR) |
+|---|---|---|---|
+| MRI-only | 68.3% ± 2.7% | 63.5% ± 7.3% | 73.0% ± 2.7% |
+| PET-only | 62.7% ± 5.0% | 68.3% ± 12.0% | 57.1% ± 4.8% |
+| Multimodal (joint-trained) | 65.1% ± 1.4% | 58.7% ± 5.5% | 71.4% ± 4.8% |
+
+### v4_stats — Auxiliary ROI Statistics
+
+| Configuration | Accuracy | Sensitivity (TPR) | Specificity (TNR) |
+|---|---|---|---|
+| MRI-only + ROI statistics | 65.1% ± 1.4% | 71.4% ± 0.0% | 58.7% ± 2.8% |
+| PET-only + ROI statistics | 66.7% ± 2.4% | 66.7% ± 0.0% | 66.7% ± 4.8% |
+
+### v4_ROIs — Individual/Paired-Region Ablation (Uniform Padding)
+
+| Configuration | Accuracy | Sensitivity (TPR) | Specificity (TNR) |
+|---|---|---|---|
+| Hippocampus pair only | 56.3% ± 7.3% | 60.3% ± 12.0% | 52.4% ± 12.6% |
+| Cerebellum-WM pair only | 65.1% ± 2.7% | 50.8% ± 9.9% | 79.4% ± 15.3% |
+| Cerebral-WM pair only | 69.0% ± 0.0% | 61.9% ± 8.2% | 76.2% ± 8.2% |
+
+### v4_ROIs_recropped — Region-Appropriate Padding
+
+| Configuration | Accuracy | Sensitivity (TPR) | Specificity (TNR) |
+|---|---|---|---|
+| Hippocampus pair only | 58.7% ± 7.3% | 60.3% ± 5.5% | 57.1% ± 19.0% |
+| Cerebellum-WM pair only | 57.1% ± 2.4% | 49.2% ± 2.7% | 65.1% ± 7.3% |
+| Cerebral-WM pair only (control, padding unchanged) | 69.0% ± 0.0% | 61.9% ± 8.2% | 76.2% ± 8.2% |
+
+### v4_wholebrain — Token-Matched Whole-Brain Input
+
+| Configuration | Accuracy | Sensitivity (TPR) | Specificity (TNR) |
+|---|---|---|---|
+| MRI-only | 56.3% ± 2.7% | 65.1% ± 7.3% | 47.6% ± 12.6% |
+| PET-only | 63.5% ± 1.4% | 52.4% ± 0.0% | 74.6% ± 2.7% |
+| Multimodal | 63.5% ± 1.4% | 55.6% ± 2.7% | 71.4% ± 0.0% |
+
+### v5 — Capacity Test
+
+| Configuration | Accuracy | Sensitivity (TPR) | Specificity (TNR) |
+|---|---|---|---|
+| MRI-only, `d_model=64` (single seed) | 66.7% | 66.7% | 66.7% |
