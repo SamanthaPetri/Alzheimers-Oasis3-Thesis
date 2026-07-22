@@ -96,7 +96,7 @@ Full version history, references, and result-by-result reasoning in `Models/READ
 | Whole-brain PET (token-matched) | 63.5% ± 1.4% | 52.4% ± 0.0% | 74.6% ± 2.7% |
 | Whole-brain Multimodal (token-matched) | 63.5% ± 1.4% | 55.6% ± 2.7% | 71.4% ± 0.0% |
 
-**For reference**: MNA-net baseline (Vo et al.) — 82.9% / 85.7% / 80.0% (single seed, published).
+**For reference**: MNA-net baseline (Vo et al.) — 82.9% / 85.7% / 80.0% (single seed).
 
 ---
 
