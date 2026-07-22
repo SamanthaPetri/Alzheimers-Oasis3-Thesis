@@ -29,7 +29,7 @@ Full detail in `Data Processing/` sub-folder READMEs.
 
 | Version | Change from previous | Status |
 |---|---|---|
-| CNN-Mamba hybrid | Earlier, non-Vision-Mamba pipeline-validation trial | Not used (see Models README) |
+| CNN-Mamba hybrid | Earlier, non-Vision-Mamba pipeline-validation trial | Not used |
 | v1 | Initial architecture — custom bidirectional wrapper (not faithful Vision Mamba) | Superseded |
 | v2 | `d_model` 64→32 to curb overfitting | Superseded |
 | v2_cali | + threshold calibration | Not carried forward (overfit small val set) |
