@@ -38,7 +38,7 @@ Full detail in `Data Processing/` sub-folder READMEs.
 | **v4** | **Clean refactor of v3 — primary reported architecture** | **Active** |
 | v4_stats | + auxiliary ROI statistics | **Active** |
 | v4_ROIs | Individual/paired-region ablation (uniform padding) | **Active** |
-| v4_ROIs_recropped | Paired-region ablation, region-appropriate padding | **Active**n |
+| v4_ROIs_recropped | Paired-region ablation, region-appropriate padding | **Active** |
 | v4_recropped | Full 6-ROI model, region-appropriate padding | **Active** |
 | v4_wholebrain | Whole-brain input, token-matched to v4 | Comparison |
 | v5 | `d_model` 32→64 revisited (single seed) | Not carried forward |
