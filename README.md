@@ -32,7 +32,7 @@ Full detail in `Data Processing/` sub-folder READMEs.
 | CNN-Mamba hybrid | Earlier, non-Vision-Mamba pipeline-validation trial | Not used |
 | v1 | Initial architecture — custom bidirectional wrapper (not faithful Vision Mamba) | Superseded |
 | v2 | `d_model` 64→32 to curb overfitting | Superseded |
-| v2_cali | + threshold calibration | Not carried forward (overfit small val set) |
+| v2_cali | + threshold calibration | Not carried forward |
 | v2_3seed | + formal multi-seed evaluation protocol | Superseded |
 | v3 | Real `VMamba` encoder, factorised embeddings, background masking | Superseded |
 | **v4** | **Clean refactor of v3 — primary reported architecture** | **Active** |
