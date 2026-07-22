@@ -38,7 +38,16 @@ Requires FSL installed (see Prerequisites above). Averages each subject's PET fr
 
 ### 6. MRI_Extraction.ipynb
 
-Extracts 6 anatomically-defined ROIs (bilateral hippocampus, cerebellum WM, cerebral WM) from FastSurfer-segmented MRI. Pipeline: mask ROI from segmentation → tight crop (+3 voxel padding) → z-score normalise (ROI voxels only) → resize to 64×64×64 → cache as .npy. Also generates 3 augmented copies (random rotation ±15°, random flips) per training-subject only, using seeds [1, 101, 42].
+Extracts 6 anatomically-defined ROIs (bilateral hippocampus, cerebellum WM, cerebral WM) from FastSurfer-segmented MRI.
+
+**Pipeline**: mask ROI from segmentation → tight crop (+3 voxel padding) → z-score normalise (ROI voxels only) → resize to 64×64×64 → cache as `.npy`
+
+Also generates 3 augmented copies (random rotation ±15°, random flips) per training subject only, using seeds `[1, 101, 42]`.
+
+**Augmentation justification**:
+- **Horizontal flipping** — supported by Zhu et al. (2024), *Vision Mamba*, which lists "random horizontal flipping" among its own training augmentations
+- **Rotation** — general practice in medical/volumetric imaging augmentation and mirrors Vo et al.'s (2025) `torchio.RandomAffine` pipeline
+- **General augmentation strategy** — Shorten & Khoshgoftaar (2019), *A Survey on Image Data Augmentation for Deep Learning* (Journal of Big Data)
 
 ### 7. extract_pet_rois.py
 
