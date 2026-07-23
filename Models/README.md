@@ -159,8 +159,8 @@ All 3-seed results use seeds `[1, 7, 123]`, reported as mean ± sample standard 
 | Configuration | Accuracy | Sensitivity (TPR) | Specificity (TNR) |
 |---|---|---|---|
 | MNA-net (Vo et al.) | 82.9% | 85.7% | 80.0% |
-| Appendix B — Whole-brain trial (CNN-Mamba hybrid) | 62.4% | — | — |
-| Appendix B — ROIStatsMamba (CNN-Mamba hybrid, MRI-only) | ~72.0% | ~76.0% | ~69.0% |
+| Whole-brain trial (CNN-Mamba hybrid) | 62.4% | — | — |
+| ROIStatsMamba (CNN-Mamba hybrid, MRI-only) | ~72.0% | ~76.0% | ~69.0% |
 
 ### v4 — Baseline
 
