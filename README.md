@@ -45,6 +45,9 @@ Full detail in `Data Processing/` sub-folder READMEs.
 
 Full version history, references, and result-by-result reasoning in `Models/README.md`.
 
+
+<img width="1621" height="487" alt="Thesis drawio" src="https://github.com/user-attachments/assets/1ca135c0-8575-4b53-a501-c7d9471c2363" />
+
 ---
 
 ## v4 — Hyperparameters
