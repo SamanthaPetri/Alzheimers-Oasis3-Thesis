@@ -36,6 +36,7 @@ Full detail in `Data Processing/` sub-folder READMEs.
 | v2_3seed | + formal multi-seed evaluation protocol | Superseded |
 | v3 | Real `VMamba` encoder, factorised embeddings, background masking | Superseded |
 | **v4** | **Clean refactor of v3 — primary reported architecture** | **Active** |
+| v4_avg | Feature averaging instead of concatenation | Not carried forward |
 | v4_stats | + auxiliary ROI statistics | **Active** |
 | v4_ROIs | Individual/paired-region ablation (uniform padding) | **Active** |
 | v4_ROIs_recropped | Paired-region ablation, region-appropriate padding | **Active** |
