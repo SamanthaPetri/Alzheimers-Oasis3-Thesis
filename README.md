@@ -2,7 +2,7 @@
 
 Predicting 10-year conversion from cognitively normal (CN) to mild cognitive impairment/Alzheimer's disease (MCI/AD) using multimodal MRI and PET imaging from the OASIS-3 dataset, via a patch-based Vision Mamba architecture applied to anatomically-defined brain regions.
 
-**Repository structure**: `Data Processing/` (extraction, augmentation, ROI statistics) · `Models/` (v1–v5 model iterations, see per-folder READMEs for detail)
+**Repository structure**: `Data Processing/` (extraction, augmentation, ROI statistics) · `Models/` (v1–v6 model iterations, see per-folder READMEs for detail)
 
 ---
 
