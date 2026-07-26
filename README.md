@@ -8,7 +8,7 @@ Predicting 10-year conversion from cognitively normal (CN) to mild cognitive imp
 
 ## Overview
 
-This project implements and evaluates a **Vision Mamba** architecture — patch-based tokenisation of anatomically-targeted MRI/PET regions, processed by a bidirectional state-space model — for predicting AD conversion from a 210-subject cohort (126 train / 42 val / 42 test, stratified). Six architecture generations (v1–v5) were developed, each addressing a specific limitation identified in the previous version. **v4** is the project's primary reported architecture; all other versions are ablations or corrective iterations.
+This project implements and evaluates a **Vision Mamba** architecture — patch-based tokenisation of anatomically-targeted MRI/PET regions, processed by a bidirectional state-space model — for predicting AD conversion from a 210-subject cohort (126 train / 42 val / 42 test, stratified). Seven architecture generations (v1–v6) were developed, each addressing a specific limitation identified in the previous version. **v4** is the project's primary reported architecture; all other versions are for comparison or corrective iterations.
 
 ---
 
