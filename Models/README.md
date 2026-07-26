@@ -83,6 +83,14 @@ Architecturally identical to v3 (same `VMamba` encoder, same factorised embeddin
 
 ---
 
+## v4_avg — Feature Averaging
+
+Same v4 architecture and branches, but combines the pooled MRI and PET feature vectors by averaging instead of concatenating before the classifier.
+- Classifier input size stays at `d_model` (32) rather than `d_model*2` (64), since averaging keeps vector length unchanged unlike concatenation
+- **Result**: accuracy matched concatenation exactly (65.1% ± 1.4% for both), but with substantially higher seed-to-seed variance in sensitivity and specificity (TPR std 13.7% vs 5.5%; TNR std 12.6% vs 4.8%) — same overall accuracy reached via a less stable trade-off between error types, consistent with averaging discarding modality-specific information that concatenation preserves
+
+--- 
+
 ## v4_stats — Auxiliary ROI Statistics
 
 Adds a `stats_proj` linear layer that fuses 6 pre-resize statistics per ROI (voxel count, mean/std intensity, bounding-box dimensions) into the pooled representation.
@@ -137,6 +145,11 @@ Same `VMamba` backbone; replaces the 6 discrete ROI inputs with a single resized
 
 ---
 
+## v4_wholebrain_fullres — Whole-Brain Input, Native Resolution
+Same as v4_wholebrain, but without the token-matching downsample — MRI (256³, FastSurfer conformed) and PET (native registered resolution) are used as-is, with no resizing or ROI cropping/masking at all.
+- Token count at 256³: 32,768 (vs 3,072 in the token-matched version)
+---
+
 ## v5 — Capacity Test (d_model=64 Revisited)
 
 Same v3/v4 `VMamba` backbone; `d_model` raised back to 64 (single-seed test).
@@ -150,9 +163,17 @@ Same v3/v4 `VMamba` backbone; `d_model` raised back to 64 (single-seed test).
 
 ---
 
+## v6 — Cross-Modal Attention Fusion
+Adds multi-head cross-attention between MRI and PET token sequences before pooling and concatenation, following Vo et al.'s MNA-net fusion order (attention first, then concatenation) rather than v4's plain concatenation.
+- Also used to extract region-level attention weights for explainability, aggregated per anatomical region relative to the uniform-attention baseline (1/3,072)
+- **Result**: single-seed accuracy did not clearly outperform base concatenation or probability fusion; attention weights ranked cerebral white matter highest and hippocampus lowest, matching the v4 accuracy ranking 
+**Reference**
+J. Vo, N. Sharif, and G. Mubashar Hassan, "Multimodal Neuroimaging Attention-Based Architecture for Cognitive Decline Prediction," arXiv:2401.06777, 2024.
+---
+
 ## Results
 
-All 3-seed results use seeds `[1, 7, 123]`, reported as mean ± sample standard deviation (ddof=1). v5 is single-seed (seed 1).
+All 3-seed results use seeds `[1, 7, 123]`, reported as mean ± sample standard deviation (ddof=1). v5 & v6 are single-seed (seed 1).
 
 ### Reference Baselines
 
@@ -169,6 +190,11 @@ All 3-seed results use seeds `[1, 7, 123]`, reported as mean ± sample standard 
 | MRI-only | 68.3% ± 2.7% | 63.5% ± 7.3% | 73.0% ± 2.7% |
 | PET-only | 62.7% ± 5.0% | 68.3% ± 12.0% | 57.1% ± 4.8% |
 | Multimodal (joint-trained) | 65.1% ± 1.4% | 58.7% ± 5.5% | 71.4% ± 4.8% |
+
+### v4_avg — Feature Averaging
+| Configuration | Accuracy | Sensitivity (TPR) | Specificity (TNR) |
+|---|---|---|---|
+| Multimodal, feature averaging | 65.1% ± 1.4% | 63.5% ± 13.7% | 66.7% ± 12.6% |
 
 ### v4_stats — Auxiliary ROI Statistics
 
@@ -201,8 +227,17 @@ All 3-seed results use seeds `[1, 7, 123]`, reported as mean ± sample standard 
 | PET-only | 63.5% ± 1.4% | 52.4% ± 0.0% | 74.6% ± 2.7% |
 | Multimodal | 63.5% ± 1.4% | 55.6% ± 2.7% | 71.4% ± 0.0% |
 
+### v4_wholebrain — Token-Matched Whole-Brain Input
+
+TO DO
+
 ### v5 — Capacity Test
 
 | Configuration | Accuracy | Sensitivity (TPR) | Specificity (TNR) |
 |---|---|---|---|
 | MRI-only, `d_model=64` (single seed) | 66.7% | 66.7% | 66.7% |
+
+### v6 — Cross-Modal Attention Fusion
+| Configuration | Accuracy | Sensitivity (TPR) | Specificity (TNR) |
+|---|---|---|---|
+| Multimodal, cross-attention + concatenation (single seed) | 64.3% | 61.9% | 66.7% |
