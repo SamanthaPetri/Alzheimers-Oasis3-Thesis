@@ -41,7 +41,9 @@ Full detail in `Data Processing/` sub-folder READMEs.
 | v4_ROIs_recropped | Paired-region ablation, region-appropriate padding | **Active** |
 | v4_recropped | Full 6-ROI model, region-appropriate padding | **Active** |
 | v4_wholebrain | Whole-brain input, token-matched to v4 | Comparison |
+| v4_wholebrain_fullres | Whole-brain input, at full resolution to v4 | Comparison |
 | v5 | `d_model` 32→64 revisited (single seed) | Not carried forward |
+| v6 | + MRI & PET cross-modal attention before concatenation; provides region-level attention for explainability | **Active** |
 
 Full version history, references, and result-by-result reasoning in `Models/README.md`.
 
@@ -50,7 +52,7 @@ Full version history, references, and result-by-result reasoning in `Models/READ
 
 ---
 
-## v4 — Hyperparameters
+## v4 (Main Model) — Hyperparameters
 
 **Learning rate (1e-4) / weight decay (1e-3)**: conservative learning rate reflects known early-training instability in Adam-family optimisers, particularly relevant given the model trains end-to-end from random initialisation on a small dataset (126 subjects) rather than fine-tuning a pretrained checkpoint [1]. Weight decay follows AdamW's decoupled formulation [2].
 
@@ -100,6 +102,26 @@ Full version history, references, and result-by-result reasoning in `Models/READ
 
 **For reference**: MNA-net baseline (Vo et al.) — 82.9% / 85.7% / 80.0% (single seed).
 
+## v6 — Cross-Modal Attention Fusion
+
+Adds multi-head cross-attention between MRI and PET token sequences, letting each modality attend to the other before pooling and concatenation — matches Vo et al.'s MNA-net fusion order (attention first, then concatenation), rather than the plain concatenation used in the base v4 multimodal model.
+
+Introduced for two reasons: to test whether direct cross-modal interaction improves on plain concatenation, and to provide region-level attention weights as a second, independent explainability signal alongside the paired-ROI ablation.
+
+
+## v6 Results
+
+Attention weights were extracted and aggregated per anatomical region, then compared against the "no preference" baseline (1/3,072, the value every region would receive under uniform attention):
+
+| Region | Mean attention | vs. baseline |
+|---|---|---|
+| Left-Cerebral-WM | 0.000344 | +5.6% |
+| Right-Cerebral-WM | 0.000343 | +5.2% |
+| Right-Cerebellum-WM | 0.000319 | −2.2% |
+| Left-Cerebellum-WM | 0.000318 | −2.3% |
+| Right-Hippocampus | 0.000314 | −3.5% |
+| Left-Hippocampus | 0.000314 | −3.7% |
+
 ---
 
 ## Key Findings
@@ -107,4 +129,5 @@ Full version history, references, and result-by-result reasoning in `Models/READ
 - ROI-based input outperforms token-matched whole-brain input, particularly for MRI
 - Auxiliary ROI statistics helped PET, not MRI — a modality-specific rather than uniform effect
 - Region-appropriate crop padding improved hippocampal performance but not cerebellum-WM, suggesting padding needs depend on how tightly a structure fills its native bounding box, not just its absolute size
+- Cross-modal attention weights (v6) independently ranked regions in the same order as v4 — cerebral white matter most attended/most predictive, hippocampus least
 - All configurations remain below the MNA-net baseline, consistent with attention/SSM architectures' known need for larger training data than the 126-subject cohort available
