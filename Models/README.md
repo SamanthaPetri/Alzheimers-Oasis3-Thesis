@@ -166,9 +166,13 @@ Same v3/v4 `VMamba` backbone; `d_model` raised back to 64 (single-seed test).
 ## v6 — Cross-Modal Attention Fusion
 Adds multi-head cross-attention between MRI and PET token sequences before pooling and concatenation, following Vo et al.'s MNA-net fusion order (attention first, then concatenation) rather than v4's plain concatenation.
 - Also used to extract region-level attention weights for explainability, aggregated per anatomical region relative to the uniform-attention baseline (1/3,072)
-- **Result**: single-seed accuracy did not clearly outperform base concatenation or probability fusion; attention weights ranked cerebral white matter highest and hippocampus lowest, matching the v4 accuracy ranking 
-**Reference**
-J. Vo, N. Sharif, and G. Mubashar Hassan, "Multimodal Neuroimaging Attention-Based Architecture for Cognitive Decline Prediction," arXiv:2401.06777, 2024.
+- **Result**: single-seed accuracy did not clearly outperform base concatenation or probability fusion; attention weights ranked cerebral white matter highest and hippocampus lowest, matching the v4 accuracy ranking
+
+**References**
+J. Vo, N. Sharif and G. M. Hassan, “MNA-Net: Multimodal neuroimaging attention-based
+architecture for cognitive decline prediction,” in Predictive Intelligence in Medicine (PRIME
+2024), Lecture Notes in Computer Science, vol. 15155, Cham, Switzerland, 2025. 
+
 ---
 
 ## Results
@@ -227,9 +231,13 @@ All 3-seed results use seeds `[1, 7, 123]`, reported as mean ± sample standard 
 | PET-only | 63.5% ± 1.4% | 52.4% ± 0.0% | 74.6% ± 2.7% |
 | Multimodal | 63.5% ± 1.4% | 55.6% ± 2.7% | 71.4% ± 0.0% |
 
-### v4_wholebrain — Token-Matched Whole-Brain Input
+### v4_wholebrain_fullres — Native Whole-Brain Input
 
-TO DO
+| Configuration | Accuracy | Sensitivity (TPR) | Specificity (TNR) |
+|---|---|---|---|
+| MRI-only | 57.9% ± 6.9% | 68.3% ± 29.1% | 47.6% ± 42.3% |
+| PET-only | 64.3% ± 0.0% | 57.1% ± 0.0% | 71.4% ± 0.0% |
+| Multimodal | 69.0% ± 2.4% | 58.7% ± 2.7% | 79.4% ± 5.5% |
 
 ### v5 — Capacity Test
 
