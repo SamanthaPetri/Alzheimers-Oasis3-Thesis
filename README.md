@@ -100,8 +100,27 @@ Full version history, references, and result-by-result reasoning in `Models/READ
 | Whole-brain MRI (token-matched) | 56.3% ± 2.7% | 65.1% ± 7.3% | 47.6% ± 12.6% |
 | Whole-brain PET (token-matched) | 63.5% ± 1.4% | 52.4% ± 0.0% | 74.6% ± 2.7% |
 | Whole-brain Multimodal (token-matched) | 63.5% ± 1.4% | 55.6% ± 2.7% | 71.4% ± 0.0% |
+| Whole-brain MRI (native resolution) | 57.9% ± 6.9% | 68.3% ± 29.1% | 47.6% ± 42.3% |
+| Whole-brain PET (native resolution) | 64.3% ± 0.0% | 57.1% ± 0.0% | 71.4% ± 0.0% |
+| Whole-brain Multimodal (native resolution) | 69.0% ± 2.4% | 58.7% ± 2.7% | 79.4% ± 5.5% |
 
 **For reference**: MNA-net baseline (Vo et al.) — 82.9% / 85.7% / 80.0% (single seed).
+
+## Training Time & Efficiency
+
+All timings measured on an RTX 3070 Ti. Mean ± sample standard deviation across 3 seeds (`[1, 7, 123]`). `Train time` is total wall-clock for one seed (including early stopping); `Inference` is per-sample; GFLOPs from a single forward pass.
+
+| Configuration | Modality | Accuracy | Train time | Inference | GFLOPs |
+|---|---|---|---|---|---|
+| **v4** | MRI-only | 68.3% ± 2.7% | 9.5 ± 1.7 min (0.16 hr) | 5.10 ± 0.10 ms | 0.24 |
+| | PET-only | 62.7% ± 5.0% | 10.8 ± 1.0 min (0.18 hr) | 6.58 ± 2.53 ms | 0.24 |
+| | Multimodal | 65.1% ± 1.4% | 24.0 ± 7.5 min (0.40 hr) | 10.08 ± 0.06 ms | 0.47 |
+| **v4_wholebrain (token-matched)** | MRI-only | 56.3% ± 2.7% | 14.6 ± 7.2 min (0.24 hr) | 8.12 ± 2.63 ms | 0.26 |
+| | PET-only | 63.5% ± 1.4% | 9.8 ± 3.0 min (0.16 hr) | 6.77 ± 2.75 ms | 0.26 |
+| | Multimodal | 63.5% ± 1.4% | 138.4 ± 54.4 min (2.31 hr) | 13.39 ± 0.41 ms | 0.52 |
+| **v4_wholebrain_fullres (native res)** | MRI-only | 57.9% ± 6.9% | 366.2 ± 184.8 min (6.10 hr) | 62.19 ± 1.67 ms | 2.52 |
+| | PET-only | 64.3% ± 0.0% | 689.2 ± 0.8 min (11.49 hr) | 61.79 ± 6.60 ms | 2.52 |
+| | Multimodal | 69.0% ± 2.4% | 1,581.3 ± 704.2 min (26.36 hr) | 80.04 ± 2.03 ms | 5.05 |
 
 ## v6 — Cross-Modal Attention Fusion
 
