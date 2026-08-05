@@ -147,6 +147,8 @@ Attention weights were extracted and aggregated per anatomical region, then comp
 ## Key Findings
 
 - ROI-based input outperforms token-matched whole-brain input, particularly for MRI
+- Full res whole-brain multimodal input exceeds both ROI-based multimodal and token-matched whole-brain
+- Full res whole-brain multimodel showed extreme seed-to-seed variance on MRI & converged to identical predictions on all PET seeds
 - Auxiliary ROI statistics helped PET, not MRI — a modality-specific rather than uniform effect
 - Region-appropriate crop padding improved hippocampal performance but not cerebellum-WM, suggesting padding needs depend on how tightly a structure fills its native bounding box, not just its absolute size
 - Cross-modal attention weights (v6) independently ranked regions in the same order as v4 — cerebral white matter most attended/most predictive, hippocampus least
