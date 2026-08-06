@@ -1,4 +1,4 @@
-# Model Version History
+# Mamba Model Version History
 
 A chronological log of every model iteration in this project — what changed, why, and what it revealed.
 
