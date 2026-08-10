@@ -58,7 +58,7 @@ Same `BiMambaWrapper` architecture. First version to run 3 fixed seeds (`[1, 7, 
 
 ---
 
-## v3 — First Faithful Vision Mamba Implementation
+## v3 — First Proper Vision Mamba Implementation
 
 Replaces `BiMambaWrapper` with `mambapy.vim.VMamba`, matching Vim's published algorithm
 
