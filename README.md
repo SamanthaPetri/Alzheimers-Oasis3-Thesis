@@ -59,7 +59,7 @@ Full version history, references, and result-by-result reasoning in `Models/READ
 
 **ReduceLROnPlateau scheduling**: learning rate halved after 10 epochs without validation-loss improvement — standard adaptive scheduling, allowing larger early steps and finer late-stage convergence.
 
-**Weight initialisation**: factorised positional embeddings scaled by `*0.02` at initialisation, matching [3], to prevent positional signal from dominating the network before it has learned anything from the data. Directly fixed an observed ~20-epoch slow-convergence issue in early v3 training.
+**Weight initialisation**: factorised positional embeddings scaled by `*0.02` at initialisation to prevent positional signal from dominating the network before it has learned anything from the data [3],. Directly fixed an observed ~20-epoch slow-convergence issue in early v3 training.
 
 **`d_model=32`**: adopted to curb overfitting from an oversized positional embedding table in the original architecture (98,304 parameters, 63.6% of the model at `d_model=64`) [4]. Retained through v4 even after v3's factorised embeddings independently resolved that issue; revisited in v5 (`d_model=64`), which showed no improvement on the single seed tested.
 
@@ -73,14 +73,23 @@ Full version history, references, and result-by-result reasoning in `Models/READ
 
 **References**
 [1] L. Liu et al., "On the Variance of the Adaptive Learning Rate and Beyond," ICLR, 2020.
+
 [2] I. Loshchilov and F. Hutter, "Decoupled Weight Decay Regularization," ICLR, 2019.
-[3] A. Radford et al., "Language Models Are Unsupervised Multitask Learners," OpenAI, 2019.
+
+[3] A. Dosovitskiy et al., "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale," ICLR, 2021.
+
 [4] C. Zhang et al., "Understanding Deep Learning Requires Rethinking Generalization," ICLR, 2017.
+
 [5] N. Srivastava et al., "Dropout: A Simple Way to Prevent Neural Networks from Overfitting," JMLR, 2014.
+
 [6] L. Prechelt, "Early Stopping — But When?," in *Neural Networks: Tricks of the Trade*, Springer, 1998.
+
 [7] L. Zhu et al., "Vision Mamba: Efficient Visual Representation Learning with Bidirectional State Space Model," arXiv:2401.09417, 2024.
+
 [8] L. Henschel et al., "FastSurfer — A Fast and Accurate Deep Learning Based Neuroimaging Pipeline," *NeuroImage*, 2020.
+
 [9] D. Picard, "torch.manual_seed(3407) is all you need," arXiv:2109.08203, 2021.
+
 [10] Y. Li et al., "Diffusion Bridge Networks Simulate Clinical-grade PET from MRI for Dementia Diagnostics," arXiv:2510.15556, 2025.
 
 ---
