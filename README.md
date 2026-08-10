@@ -59,7 +59,7 @@ Full version history, references, and result-by-result reasoning in `Models/READ
 
 **ReduceLROnPlateau scheduling**: learning rate halved after 10 epochs without validation-loss improvement — standard adaptive scheduling, allowing larger early steps and finer late-stage convergence.
 
-**Weight initialisation**: factorised positional embeddings scaled by `*0.02` at initialisation, matching the convention used in GPT-2's released implementation [3], to prevent positional signal from dominating the network before it has learned anything from the data. Directly fixed an observed ~20-epoch slow-convergence issue in early v3 training.
+**Weight initialisation**: factorised positional embeddings scaled by `*0.02` at initialisation, matching [3], to prevent positional signal from dominating the network before it has learned anything from the data. Directly fixed an observed ~20-epoch slow-convergence issue in early v3 training.
 
 **`d_model=32`**: adopted to curb overfitting from an oversized positional embedding table in the original architecture (98,304 parameters, 63.6% of the model at `d_model=64`) [4]. Retained through v4 even after v3's factorised embeddings independently resolved that issue; revisited in v5 (`d_model=64`), which showed no improvement on the single seed tested.
 
@@ -74,7 +74,7 @@ Full version history, references, and result-by-result reasoning in `Models/READ
 **References**
 [1] L. Liu et al., "On the Variance of the Adaptive Learning Rate and Beyond," ICLR, 2020.
 [2] I. Loshchilov and F. Hutter, "Decoupled Weight Decay Regularization," ICLR, 2019.
-[3] A. Radford et al., "Language Models Are Unsupervised Multitask Learners," OpenAI, 2019 (initialisation convention per released GPT-2 implementation).
+[3] A. Radford et al., "Language Models Are Unsupervised Multitask Learners," OpenAI, 2019.
 [4] C. Zhang et al., "Understanding Deep Learning Requires Rethinking Generalization," ICLR, 2017.
 [5] N. Srivastava et al., "Dropout: A Simple Way to Prevent Neural Networks from Overfitting," JMLR, 2014.
 [6] L. Prechelt, "Early Stopping — But When?," in *Neural Networks: Tricks of the Trade*, Springer, 1998.
