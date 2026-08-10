@@ -59,9 +59,9 @@ Full version history, references, and result-by-result reasoning in `Models/READ
 
 **ReduceLROnPlateau scheduling**: learning rate halved after 10 epochs without validation-loss improvement — standard adaptive scheduling, allowing larger early steps and finer late-stage convergence.
 
-**Weight initialisation**: factorised positional embeddings scaled by `*0.02` at initialisation to prevent positional signal from dominating the network before it has learned anything from the data [3],. Directly fixed an observed ~20-epoch slow-convergence issue in early v3 training.
+**Weight initialisation**: factorised positional embeddings scaled by `*0.02` at initialisation to prevent positional signal from dominating the network before it has learned anything from the data [3],. Directly fixed an observed ~20-epoch slow-convergence issue in early training.
 
-**`d_model=32`**: adopted to curb overfitting from an oversized positional embedding table in the original architecture (98,304 parameters, 63.6% of the model at `d_model=64`) [4]. Retained through v4 even after v3's factorised embeddings independently resolved that issue; revisited in v5 (`d_model=64`), which showed no improvement on the single seed tested.
+**d_model=32: chosen to curb overfitting, since the original architecture's positional embedding table accounted for 98,304 parameters — 63.6% of the model at d_model=64 — which was disproportionate given the 126-subject training set [4]. This was later revisited in v5 (d_model=64), which showed no improvement on the single seed tested, suggesting the smaller setting was not simply an unnecessary constraint.
 
 **Dropout (0.4) / early stopping**: standard regularisation for a small-dataset regime [5][6].
 
