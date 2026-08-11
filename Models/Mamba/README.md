@@ -118,7 +118,6 @@ Same paired-region structure as v4_ROIs, using a new cache with region-specific 
 
 **References**
 - `FastSurfer` segmentation labels — Henschel et al. (2020), *[FastSurfer — A fast and accurate deep learning based neuroimaging pipeline](https://doi.org/10.1016/j.neuroimage.2020.117012)* (NeuroImage) — source of anatomical masks and z-score intensity normalization convention
-- Padding values chosen empirically from this project's own visual/quantitative comparison
 
 ---
 
@@ -140,7 +139,7 @@ Same `VMamba` backbone; replaces the 6 discrete ROI inputs with a single resized
 - **Result**: whole-brain underperformed ROI-based input across all three configurations, most notably for MRI
 
 **References**
-- Motivated by the project's own Appendix B trial and by Khan et al. (cited in the project proposal's literature review as prior evidence that anatomically-informed input outperforms arbitrary/whole-volume input)
+- I. J. Khan et al., “Enhanced ROI guided deep learning model for Alzheimer's detection using 3D MRI images,” Informatics in Medicine Unlocked, vol. 56, p. 101665, 2025. 
 - Token-matching calculation original to this project
 
 ---
