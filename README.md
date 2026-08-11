@@ -72,25 +72,26 @@ Full version history, references, and result-by-result reasoning in `Models/READ
 **PET frame averaging before registration**: standard PET preprocessing practice, combining dynamic frames into a single reference volume prior to spatial registration [10].
 
 **References**
-[1] L. Liu et al., "On the Variance of the Adaptive Learning Rate and Beyond," ICLR, 2020.
 
-[2] I. Loshchilov and F. Hutter, "Decoupled Weight Decay Regularization," ICLR, 2019.
+[1] L. Liu, H. Jiang, P. He, W. Chen, X. Liu, J. Gao, and J. Han, “On the variance of the adaptive learning rate and beyond,” in Proc. Int. Conf. Learn. Represent. (ICLR), 2020.
 
-[3] A. Dosovitskiy et al., "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale," ICLR, 2021.
+[2] I. Loshchilov and F. Hutter, “Decoupled weight decay regularization,” in Proc. Int. Conf. Learn. Represent. (ICLR), 2019.
 
-[4] C. Zhang et al., "Understanding Deep Learning Requires Rethinking Generalization," ICLR, 2017.
+[3] A. Dosovitskiy et al., “An image is worth 16×16 words: Transformers for image recognition at scale,” in Proc. Int. Conf. Learn. Represent. (ICLR), 2021.
 
-[5] N. Srivastava et al., "Dropout: A Simple Way to Prevent Neural Networks from Overfitting," JMLR, 2014.
+[4] C. Zhang, S. Bengio, M. Hardt, B. Recht, and O. Vinyals, “Understanding deep learning requires rethinking generalization,” in Proc. Int. Conf. Learn. Represent. (ICLR), 2017.
 
-[6] L. Prechelt, "Early Stopping — But When?," in *Neural Networks: Tricks of the Trade*, Springer, 1998.
+[5] N. Srivastava, G. Hinton, A. Krizhevsky, I. Sutskever, and R. Salakhutdinov, “Dropout: A simple way to prevent neural networks from overfitting,” J. Mach. Learn. Res., vol. 15, no. 56, pp. 1929–1958, 2014.
 
-[7] L. Zhu et al., "Vision Mamba: Efficient Visual Representation Learning with Bidirectional State Space Model," arXiv:2401.09417, 2024.
+[6] L. Prechelt, “Early stopping—But when?,” in Neural Networks: Tricks of the Trade, G. B. Orr and K.-R. Müller, Eds. Berlin, Germany: Springer, 1998, pp. 55–69.
 
-[8] L. Henschel et al., "FastSurfer — A Fast and Accurate Deep Learning Based Neuroimaging Pipeline," *NeuroImage*, 2020.
+[7] L. Zhu, B. Liao, Q. Zhang, X. Wang, W. Liu, and X. Wang, “Vision Mamba: Efficient visual representation learning with bidirectional state space model,” arXiv preprint arXiv:2401.09417, 2024.
 
-[9] D. Picard, "torch.manual_seed(3407) is all you need," arXiv:2109.08203, 2021.
+[8] L. Henschel, S. Conjeti, S. Estrada, K. Diers, B. Fischl, and M. Reuter, “FastSurfer—A fast and accurate deep learning based neuroimaging pipeline,” NeuroImage, vol. 219, Art. no. 117012, 2020, doi: 10.1016/j.neuroimage.2020.117012.
 
-[10] Y. Li et al., "Diffusion Bridge Networks Simulate Clinical-grade PET from MRI for Dementia Diagnostics," arXiv:2510.15556, 2025.
+[9] D. Picard, “Torch.manual_seed(3407) is all you need: On the influence of random seeds in deep learning architectures for computer vision,” arXiv preprint arXiv:2109.08203, 2021.
+
+[10] Y. Li, R. Buchert, B. Schmitz-Koep, T. Grimmer, B. Ommer, D. M. Hedderich, I. Yakushev, and C. Wachinger, “Diffusion bridge networks simulate clinical-grade PET from MRI for dementia diagnostics,” arXiv preprint arXiv:2510.15556, 2025.
 
 ---
 
