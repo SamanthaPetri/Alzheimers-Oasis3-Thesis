@@ -28,7 +28,7 @@ Only the sequence-relating mechanism changed — `VimEncoder` replaced with PyTo
 
 ### Result summary
 
-The Transformer consistently underperformed Mamba on the 6-region configuration, with substantially higher seed-to-seed variance and clear overfitting in training curves.
+The Transformer consistently underperformed Mamba, with substantially higher seed-to-seed variance and clear overfitting in training curves.
 
 This is treated as supporting evidence that the gap to the MNA-Net baseline reflects a broader data-scarcity limitation affecting sequence-based architectures generally, not a weakness specific to Mamba.
 
