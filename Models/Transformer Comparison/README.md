@@ -1,4 +1,4 @@
-## Transformer Comparison (Not Part of Primary Results)
+# Transformer Comparison (Not Part of Primary Results)
 
 Notebooks swapping the Vision Mamba encoder for a standard multi-layer Transformer encoder, keeping everything else in the pipeline identical (patch embedding, ROI/position embeddings, masking, pooling, classifier, training protocol, seeds). Run to test whether the performance gap versus the MNA-Net baseline is specific to Mamba.
 
@@ -8,11 +8,11 @@ Notebooks swapping the Vision Mamba encoder for a standard multi-layer Transform
 - `Trans_comp_wholebrain_fullres` — whole-brain input, native resolution (32,768 tokens), no downsampling
 
 
-### Implementation
+## Implementation
 
 Only the sequence-relating mechanism changed — `VimEncoder` replaced with PyTorch's built-in `torch.nn.TransformerEncoder` (multi-head self-attention + feed-forward, stacked in layers) [1].
 
-### Results (3-seed mean ± std, Test Set)
+## Results (3-seed mean ± std, Test Set)
 
 | Configuration | Accuracy | Sensitivity (TPR) | Specificity (TNR) |
 |---|---|---|---|
@@ -26,7 +26,7 @@ Only the sequence-relating mechanism changed — `VimEncoder` replaced with PyTo
 | Whole-brain PET (native resolution) | TBD | TBD | TBD |
 | Whole-brain Multimodal (native resolution) | TBD | TBD | TBD |
 
-### Result summary
+## Result summary
 
 The Transformer consistently underperformed Mamba, with substantially higher seed-to-seed variance and clear overfitting in training curves.
 
