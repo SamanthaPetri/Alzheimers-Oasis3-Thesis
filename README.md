@@ -26,7 +26,7 @@ front end, no pretrained weights. Six anatomical ROIs are cut into 8³ patches
 giving 3,072 tokens per modality, which pass directly to a bidirectional Mamba
 encoder.
 
-PUT IMAGE HERE
+<img width="1622" height="487" alt="Untitled Diagram drawio" src="https://github.com/user-attachments/assets/a45dc910-c8a0-443a-a624-58e0fac3d95a" />
 
 ---
 
