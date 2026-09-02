@@ -47,8 +47,18 @@ no improvement.
 | `final_mamba_v7_trans.ipynb` | Transformer encoder |
 | `final_mamba_v7-CNN_Scratch.ipynb` | From-scratch CNN tokenisation |
 | `final_mamba_v7_CNN_Pretrain.ipynb` | MedicalNet pretrained tokenisation |
-| `final_mamba_v7_attention.ipynb` | Cross-modal attention |
-| `final_comparison.ipynb` | MNA-net replication and Mamba fusion |
+| `final_mamba_v7_attention.ipynb` | Region-attention pooling |
+| `final_mamba_v7_attention_1.ipynb` | Cross-modal attention |
+| `final_mamba_v7_wholebrain.ipynb` | Whole-brain Vision Mamba |
+| `final_mamba_v7_wholebrain_trans.ipynb` | Whole-brain transformer |
+| `final_mamba_v7_wholebrain_CNN_Scratch.ipynb` | Whole-brain, from-scratch CNN |
+| `final_mamba_v7_wholebrain_CNN_Pretrain.ipynb` | Whole-brain, MedicalNet |
+| `mnanet_comparison.ipynb` | MNA-net replication and Mamba fusion |
+
+The whole-brain notebooks mirror the ROI ones exactly, substituting the
+native-resolution 256³ volumes (32,768 tokens) for the six 64³ ROI crops
+(3,072 tokens); at roughly ten times the FLOPs and forty times the training
+time, they serve as a cost comparison rather than a competitive configuration.
 
 ### `final_mamba_v7.ipynb`
 
@@ -132,9 +142,6 @@ ROI models train from an in-memory cache while whole-brain volumes are
 streamed from disk, so training times between the two are not directly
 comparable. GFLOPs and inference latency are hardware-independent and should
 be preferred for efficiency claims.
-
-Results are written to `v7_*_results.json` with every seed retained, including
-any excluded from the reported mean.
 
 ---
 
