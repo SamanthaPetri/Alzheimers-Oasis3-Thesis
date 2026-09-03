@@ -198,6 +198,9 @@ Identical data, split and seeds throughout. Only the stated component differs.
 | | PET | 69.2% ± 6.3% | 60.0% | 78.3% | 14,399,714 | 106.4 |
 | | Multimodal | 70.8% ± 3.8% | 53.3% | 88.3% | 28,799,426 | 212.7 |
 | **Cross-modal attention** | Multimodal | 64.2% ± 6.3% | 65.0% | 63.3% | 98,370 | 0.47 |
+| **Region-attention pooling** | MRI | 66.7% ± 2.9% | 65.0% | 68.3% | 45,540 | 0.24 |
+| | PET | 65.8% ± 2.9% | 63.3% | 68.3% | 45,540 | 0.24 |
+| | Multimodal | **71.7% ± 3.8%** | 66.7% | 76.7% | 91,012 | 0.47 |
 
 **Transformer.** Replaces `VimEncoder` with `nn.TransformerEncoder` at matched
 depth and width, keeping the same patch tokenisation. Worse than Mamba on MRI
@@ -220,6 +223,11 @@ order used by MNA-net [12]. It does not improve accuracy (64.2% vs 66.7%) and
 is the slowest ROI variant at 24 ms per sample, since it materialises a
 3,072 × 3,072 attention matrix per head. Its value is interpretability: the
 region weights below come from this model.
+
+**Region-attention pooling.** Instead of averaging the six regions equally, the
+model learns how much weight to give each one. Multimodal gains 5 points over
+plain averaging (71.7% vs 66.7%) at the same cost — the best six-region
+configuration.
 
 ---
 
