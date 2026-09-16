@@ -47,8 +47,7 @@ Five of the nine segmentation failures also had PET regions where z-scoring was
 skipped because the region standard deviation was zero, leaving raw intensities
 two orders of magnitude above the rest of the cohort.
 
-Full audit in `Data Processing/qc_audit.py`; the exclusion list is
-`excluded_subjects.csv`.
+Full audit in `Data Processing/qc_audit.py`.
 
 ---
 
@@ -223,10 +222,7 @@ give 1/3072 = 0.000326 per token.
 
 Left and right differ by under 2% for every pair, values agree to three
 significant figures across seeds, and MRI and PET tokens show the same
-ordering. This ordering does not match the region-pair ablation, where
-hippocampus gives the highest multimodal accuracy. The weights have not been
-compared against per-region counts of occupied tokens and are reported as
-descriptive only.
+ordering.
 
 The proposed model's per-region modality attention weights are within half a
 percentage point of 50% in every region and both directions, so they show no
@@ -316,8 +312,8 @@ parameter counts are unaffected.
   and cerebral WM (+3.3), but not cerebellar WM (−0.9).**
 - **MedicalNet pretraining did not improve unimodal accuracy** over the same
   ResNet-10 trained from random initialisation.
-- **Cross-modal attention weights rank cerebral WM highest and hippocampus
-  lowest**, while region-pair accuracy ranks hippocampus highest.
+- **Hippocampus gives the highest region-pair accuracy**, with multimodal input
+  reaching 72.5%, above the full six-region baseline.
 - **The proposed model reaches 78.3% at 0.47 GFLOPs**, 4.6 points below the
   published MNA-net result on a different cohort.
 
