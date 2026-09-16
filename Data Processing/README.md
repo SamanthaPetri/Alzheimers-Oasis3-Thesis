@@ -30,6 +30,8 @@ Run in the order below.
 
 ### 1. `thesis_cohort_final.csv`
 
+Created using same selection criteria as Vo et. al [1]. Scripts for this can be found [here.](https://github.com/JamieVo890/Multimodal-Attention-based-Neural-Networks-for-the-Prediction-of-Cognitive-Decline.git)
+
 Cohort definition for all 210 candidate subjects: `subject_id`,
 `baseline_day`, `conversion_day`, `pet_day`, `mri_day`, `mri_session`,
 `outcome_label` (1 = converts to MCI/AD within 10 years, 0 = stable CN).
