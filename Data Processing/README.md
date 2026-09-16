@@ -34,6 +34,11 @@ Cohort definition for all 210 candidate subjects: `subject_id`,
 `baseline_day`, `conversion_day`, `pet_day`, `mri_day`, `mri_session`,
 `outcome_label` (1 = converts to MCI/AD within 10 years, 0 = stable CN).
 
+(Not included in this repository: it contains OASIS-3 subject IDs linked to
+clinical outcomes and visit dates, and the OASIS-3 Data Use Agreement does not
+permit redistribution of subject-level data. It can be regenerated from the
+OASIS-3 clinical and imaging records by approved users.)
+
 ### 2. `check_pet_days.py`
 
 Verifies each subject has a PIB PET scan within 30 days of their target
