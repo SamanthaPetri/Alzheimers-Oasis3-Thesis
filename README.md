@@ -86,7 +86,7 @@ torchio's defaults as follows:
 - **No elastic deformation.** The ROI crops have only 3 voxels of padding.
 - **Single-axis flips, no left–right flip.** The six ROIs form three bilateral
   pairs with fixed left/right indices and learned positional embeddings.
-- **Rotation ±7°** rather than the ±10° default.
+- **Rotation ±7°**. Enough flip to ensure ROIs not outisde cropped area.
 
 ---
 
