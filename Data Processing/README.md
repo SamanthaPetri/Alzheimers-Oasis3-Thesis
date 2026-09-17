@@ -45,8 +45,7 @@ OASIS-3 clinical and imaging records by approved users.)
 
 Verifies each subject has a PIB PET scan within 30 days of their target
 `pet_day`, matching against the raw PET directory. Reports exact matches,
-close matches, and subjects with no usable scan. Verification only — produces
-no output files.
+close matches, and subjects with no usable scan.
 
 ### 3. FastSurfer
 
@@ -68,17 +67,12 @@ result onto the subject's MRI space (`flirt`, 6 DOF) using `orig.nii.gz` as
 reference.
 
 The late frames are the 5-minute frames constituting the amyloid binding
-window; earlier frames are perfusion-weighted and dilute the specific signal.
-OASIS-3 PIB frame counts vary across this cohort (25–53), and the fixed last-9
-selection follows Vo et al. [1], who apply the same rule without adjusting for
-frame count.
+window; follows Vo et al. [1]
 
 Outputs `PET_registered_v3/{subject_id}_PIB_in_MRI_v3.nii.gz` plus transform
 matrices, and logs the frames used per subject to
 `logs_v3/frame_selection_v3.csv`.
 
-OAS30065 is skipped — its source PET is a single volume rather than a dynamic
-series. Vo et al. exclude the same subject.
 
 ### 6. `MRI_Extraction.ipynb`
 
@@ -95,18 +89,10 @@ segmentation masks — PET has no reliable anatomical detail of its own to
 segment on. Identical crop → normalise → resize pipeline, so PET and MRI
 caches stay dimensionally consistent for later fusion.
 
-Because cropping by segmentation label excludes everything outside the
-structure by construction, ROIs need no separate skull-stripping step.
-
 ### 8. `extract_wholebrain_mri_v2.py` and `extract_wholebrain_pet_v4.py`
 
 Whole-brain volumes at native 256³, masked with FastSurfer's `mask.mgz` and
-z-scored over non-zero voxels. Both modalities use the same mask, giving a
-matched brain fraction of approximately 7%.
-
-`mask.mgz` is used rather than the DKT segmentation because the segmentation
-excludes roughly 19% of brain volume — mostly cortical ribbon and CSF — and
-cortical thinning is a primary structural marker of AD progression.
+z-scored over non-zero voxels.
 
 ### 9. `qc_audit.py`
 
@@ -144,26 +130,16 @@ problem:
 
 - **`default_pad_value=0`** — without it, space rotated in from outside the
   volume is filled with a non-zero value. On z-scored data (background exactly
-  0, tissue ±3) this fabricates voxels above the magnitude of real tissue,
-  which then pass the model's occupancy mask as valid tokens. Measured on a
-  first attempt: 1.4M invented voxels per whole-brain volume at median
-  magnitude 2.68 against real-tissue median 0.44.
+  0, tissue ±3) this fabricates voxels above the magnitude of real tissue.
 - **No elastic deformation** — the ROI crops are bounding boxes with 3 voxels
   of padding, so local warping displaces anatomy outside the crop.
 - **Single-axis flips** — the six ROIs form three bilateral pairs with fixed
-  left/right indices and learned positional embeddings. A left–right flip
+  left/right indices. A left–right flip
   would place a right-hemisphere structure at the index the model encodes as
   left.
 
 Rotation is reduced from torchio's ±10° default to ±7°, because at ±10 a
 corner voxel of a 64³ crop moves further than the available padding.
-
-The script runs an interpolation check per dataset, reporting how many voxels
-gained a value and their magnitude relative to real tissue. This was added
-after an earlier `scipy.ndimage.rotate` pipeline at its default `order=3`
-(cubic spline) was found to ring at tissue boundaries, raising the non-zero
-fraction from 0.13 to 0.84 for ROIs and flooding the token sequence with
-interpolation artefacts.
 
 ### 12. `PET_ROI_Images.ipynb`
 
@@ -191,21 +167,10 @@ interchangeable.
 | Reference | FastSurfer conformed | `MNI152_T1_2mm_brain` |
 
 The main pipeline stays in native 1 mm space because the FastSurfer
-segmentation is defined there. Moving the labels to MNI would require
-nearest-neighbour resampling to 2 mm, discarding roughly seven eighths of each
-label's voxels — with the hippocampus, already the most fragile structure in
-the parcellation, worst affected.
+segmentation is defined there.
 
 The comparison branch must use 2 mm MNI because Vo's frozen patch encoders
-were trained on volumes of exactly that shape. Those encoders end in
-`AdaptiveAvgPool3d`, so they accept any input size without erroring: a
-mismatched volume produces plausible-looking but meaningless output. The
-geometry check in the patch extraction is deliberately strict for that reason.
-
-Note that Vo et al. report final registered images of 90 × 116 × 90, which
-does not match the template their own registration script targets.
-`MNI152_T1_2mm_brain.nii.gz` is 91 × 109 × 91, and that is what this
-reproduction uses.
+were trained on volumes of exactly that shape.
 
 ### Steps
 
@@ -220,12 +185,7 @@ reproduction uses.
 4. Min-max scale to [0,1]
 5. `flirt` to `MNI152_T1_2mm_brain`
 
-The BET-then-SynthStrip order follows Vo's own script [1]. BET alone struggles
-on PET because there is no skull edge to key on; adding SynthStrip raised the
-reproduction from 75.0% to 80.4%.
-
-Normalisation happens **before** registration and is not repeated afterwards,
-matching Vo's ordering.
+The BET-then-SynthStrip order follows Vo's own script [1]. 
 
 **Patching** — crop to 88 × 108 × 88, then a 3×3×3 grid of 44 × 54 × 44
 patches with 50% overlap, giving 27 patches per modality.
