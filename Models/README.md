@@ -1,9 +1,9 @@
 # Models
 
-Vision Mamba architectures for 10-year CN → MCI/AD conversion prediction.
+Vision Mamba architectures for 10-year CN to MCI/AD conversion prediction.
 All notebooks read the caches produced by `Data Processing/`.
 
-**Cohort**: 200 subjects, 120 / 40 / 40 split at `random_state=42`, stratified.
+**Cohort**: 200 subjects, 120 / 40 / 40 stratified split.
 **Seeds**: `[1, 7, 123]`, reported as mean ± sample standard deviation [1].
 **Hardware**: RTX 3070 Ti.
 
@@ -15,7 +15,7 @@ one cell per seed and a summary.
 
 ## Architecture
 
-The baseline and proposed models share a common front end. Six anatomical ROIs
+The base (original) and proposed models share a common front end. Six anatomical ROIs
 are each cut into 8³ patches by a single `Conv3d`, giving 512 tokens per region
 and 3,072 per modality. Factorised positional embeddings (depth, height, width
 and a per-ROI embedding) are added, scaled by 0.02 at initialisation. An
@@ -39,7 +39,7 @@ each region, that region's MRI and PET summaries are stacked and passed through
 a shared multi-head attention layer, producing six fused 64-dimensional
 vectors. These are concatenated to 384 for classification. This follows
 MNA-net's fusion design [3], applied to anatomical regions rather than uniform
-patches. The mechanism requires both modalities and has no unimodal form.
+patches. This requires both modalities to be mixed.
 
 `d_model=32`, `n_layers=2`, `d_state=16`, dropout 0.4 [4], AdamW at lr 1e-4
 with weight decay 1e-3 [5], `ReduceLROnPlateau`, early stopping on validation
@@ -73,47 +73,32 @@ all six regions, as in MNA-net [3].
 
 ### `final_mamba_v7_perregion_concat.ipynb`
 
-Control for the proposed model. Identical up to the region summaries and
-identical in readout width (6 × 64 = 384 into the classifier), but the MRI and
-PET summaries at each region are concatenated directly rather than passed
-through attention.
-
-This separates the two changes the proposed model makes relative to the
-baseline: keeping the six region summaries separate rather than averaging them,
-and adding the attention layer.
+Identical to proposed model, but no attention layer (MRI and
+PET summaries at each region are concatenated directly)
 
 ### `final_mamba_v7.ipynb`
 
-The baseline ROI Vision Mamba, evaluated on MRI, PET and multimodal input.
+The base (original) first ROI Vision Mamba model, evaluated on MRI, PET and multimodal input.
 
 ### `final_mamba_v7_indv_rois.ipynb`
 
 Each bilateral pair trained in isolation: hippocampus (ROI indices 0–1),
 cerebellar WM (2–3), cerebral WM (4–5). Two ROIs give 1,024 tokens instead of
-3,072. Nine conditions, three regions × three modalities, three seeds each.
-
-The dataset class loads the full 6-ROI array and slices the requested pair, so
-no separate caches are required.
+3,072. Three regions × three modalities at three seeds each.
 
 ### `final_mamba_v7_trans.ipynb`
 
-Replaces `VimEncoder` with `nn.TransformerEncoder` at matched depth and width,
-holding the patch tokenisation fixed, so the sequence model is the only
-variable.
+Replaces `VimEncoder` with `nn.TransformerEncoder`
 
 ### `final_mamba_v7_CNN_Untrain.ipynb` and `final_mamba_v7_CNN_Pretrain.ipynb`
 
-Both replace the patch embedding with MedicalNet's ResNet-10 trunk [8] up to
-`layer4`, producing one token per ROI: 6 tokens rather than 3,072. The two
-notebooks are architecturally identical; the only difference is whether the
+Both replace the patch embedding with MedicalNet's ResNet-10 trunk [8], producing one token per ROI: 6 tokens rather than 3,072. The two
+notebooks are almost identical; the only difference is whether the
 pretrained weights are loaded or the trunk is randomly initialised.
 
 The pretrained trunk is fine-tuned unfrozen, at the same learning rate as the
 rest of the network. It requires the MedicalNet repository on the Python path
 and `resnet_10_23dataset.pth`.
-
-Both change the tokenisation as well as adding a convolutional front end, so
-neither isolates the convolutional encoder alone.
 
 ### `final_mamba_v7_attention.ipynb`
 
@@ -123,19 +108,14 @@ pooling, following MNA-net's fusion order [3]. Multimodal only.
 Region weights are extracted as the mean attention each key token received,
 averaged over all queries, then averaged by region. Each query's weights sum to
 1 across the 3,072 keys, so the average over all keys is fixed at 1/3072;
-region values are interpreted relative to that figure.
+region values are interpreted relative to that.
 
-Memory note: this computes a 3,072 × 3,072 attention matrix per head, so
-`BATCH_SIZE = 1` may be required.
 
 ### `final_mamba_v7_wholebrain.ipynb`
 
 Substitutes native-resolution 256³ volumes (32,768 tokens) for the six 64³ ROI
-crops (3,072 tokens), with everything downstream unchanged. This measures the
+crops (3,072 tokens), with everything else unchanged. This measures the
 cost and accuracy of whole-brain input against region-based input.
-
-The proposed model has no whole-brain equivalent: per-region fusion requires
-anatomical regions, which a whole-brain volume does not define.
 
 Single seed. At roughly 300–570 minutes per run the three-seed protocol was not
 feasible, and the figures should be read as indicative.
@@ -144,13 +124,11 @@ feasible, and the figures should be read as indicative.
 
 Three parts, all on the MNI-space SynthStripped data:
 
-1. **Replication**: Vo's frozen 27 + 27 patch encoders, his modality
-   attention, and his stage-3 concatenation into a single dense layer [3].
-2. **Mamba fusion**: identical stages 1 and 2, but the 27 patches become a
+1. **Replication**: Complete Vo et al. replication [3].
+2. **Mamba fusion**: 27 patches become a
    sequence with positional embeddings and pass through Mamba rather than
    being concatenated.
-3. **Pure Vision Mamba**: the baseline architecture on the same MNI volumes,
-   no CNN and no pretrained weights.
+3. **Pure Vision Mamba**: Vim on same MNI volumes
 
 These models use the 209-subject MNA-net cohort rather than the 200-subject
 clean cohort, to match Vo et al.'s subject set.
@@ -160,8 +138,7 @@ clean cohort, to match Vo et al.'s subject set.
 ## Reported metrics
 
 Each seed records accuracy, sensitivity (TPR), specificity (TNR), parameter
-count, GFLOPs from a single forward pass, per-sample inference latency
-(CUDA-synchronised, averaged over 20 batches), total training wall-clock, and
+count, GFLOPs from a single forward pass, per-sample inference latency, total training wall-clock, and
 the epoch at which validation loss reached its minimum.
 
 A warning fires if `best_epoch < 5`, flagging runs that may have stopped close
