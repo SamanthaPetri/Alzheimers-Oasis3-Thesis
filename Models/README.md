@@ -1,6 +1,6 @@
 # Models
 
-Vision Mamba architectures for 10-year CN to MCI/AD conversion prediction.
+Vision Mamba models for 10-year CN to MCI/AD conversion prediction.
 All notebooks read the caches produced by `Data Processing/`.
 
 **Cohort**: 200 subjects, 120 / 40 / 40 stratified split.
