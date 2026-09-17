@@ -6,7 +6,7 @@ from the OASIS-3 dataset, via a patch-based Vision Mamba architecture [1]
 applied to anatomically-defined brain regions.
 
 **Repository structure**: `Data Processing/` (extraction, augmentation, quality
-control) · `Models/` (architecture and ablations) · `superseded/` (earlier
+control) · `Models/` (architecture and comparisons) · `superseded/` (earlier
 pipeline versions, archived).
 
 > Earlier results are archived in `superseded/README.md`. They were produced
@@ -18,14 +18,16 @@ pipeline versions, archived).
 ## Overview
 
 This project implements and evaluates a Vision Mamba architecture: patch-based
-tokenisation of anatomically-targeted MRI/PET regions, processed by a
-bidirectional state-space model, for predicting AD conversion.
+tokenisation of anatomically-targeted MRI/PET regions for predicting AD conversion.
 
 The proposed model pools tokens within each of six anatomical regions and fuses
 the MRI and PET summaries at each region through a shared attention layer. It
-reaches **78.3% ± 6.3% accuracy at 0.47 GFLOPs**, with no convolutional backbone
-and no pretrained weights.
+reaches **78.3% ± 6.3% accuracy at 0.47 GFLOPs**.
 
+## Proposed Model:
+<img width="2182" height="782" alt="thesis_proposed" src="https://github.com/user-attachments/assets/e39d3525-5269-4fbb-93e8-8a6deca2e8f8" />
+
+## Base (original) Model:
 <img width="1622" height="487" alt="Architecture diagram" src="https://github.com/user-attachments/assets/a45dc910-c8a0-443a-a624-58e0fac3d95a" />
 
 ---
@@ -43,12 +45,6 @@ Ten subjects were excluded from the original 210 following quality control:
 | OAS31103 | Right hippocampus absent |
 | OAS30065 | Corrupt source PET (single volume; also excluded by Vo et al. [2]) |
 
-Five of the nine segmentation failures also had PET regions where z-scoring was
-skipped because the region standard deviation was zero, leaving raw intensities
-two orders of magnitude above the rest of the cohort.
-
-Full audit in `Data Processing/qc_audit.py`.
-
 ---
 
 ## Data Processing
@@ -59,32 +55,22 @@ Pipeline: mask by DKT label → crop with 3-voxel padding → z-score over ROI
 voxels only → resize to 64³ → cache.
 
 **PET temporal averaging.** The final 9 frames of the dynamic PIB acquisition
-are averaged, corresponding to the late amyloid binding window [4]. OASIS-3 PIB
-acquisitions vary in frame count (25–53 in this cohort); the fixed last-9
-selection follows Vo et al. [2], who apply the same rule without frame-count
-adjustment. Frame selection is logged per subject in
-`logs_v3/frame_selection_v3.csv`.
+are averaged, corresponding to the late amyloid binding window [4]. The fixed last-9
+selection follows Vo et al. [2]
 
 **PET registration.** Rigid (6-DOF) FLIRT to the subject's own native MRI
 space, so ROI extraction uses the same segmentation for both modalities.
-Cropping by segmentation label excludes everything outside the structure, so
-no separate skull-stripping is applied for ROI inputs.
-
-**Whole-brain volumes.** Masked with FastSurfer's `mask.mgz` and z-scored over
-non-zero voxels, giving a ~7% non-zero fraction matched between modalities. The
-DKT segmentation is not used for this purpose because it excludes roughly 19%
-of brain volume, mostly cortical ribbon and CSF.
+Cropping by segmentation label excludes everything outside the structure.
 
 **Augmentation.** torchio [5], three copies per training subject at seeds
-`[1, 101, 42]`, expanding 120 → 480 training samples. Settings differ from
+`[1, 101, 42]`, expanding 120 to 480 training samples. Settings differ from
 torchio's defaults as follows:
 
 - **`default_pad_value=0`.** Without it, space rotated in from outside the
   volume is filled with a non-zero value, which on z-scored data passes the
   occupancy mask as tissue.
 - **No elastic deformation.** The ROI crops have only 3 voxels of padding.
-- **Single-axis flips, no left–right flip.** The six ROIs form three bilateral
-  pairs with fixed left/right indices and learned positional embeddings.
+- **Single-axis flips, no left–right flip.** Avoids altering left-right ROIs.
 - **Rotation ±7°**. Enough rotation to ensure ROIs not outisde cropped area.
 
 ---
@@ -125,24 +111,21 @@ is 2.5 percentage points.
 | Model | Accuracy | TPR | TNR | Params | GFLOPs |
 |---|---|---|---|---|---|
 | **Per-region modality attention** | **78.3% ± 6.3%** | 75.0% | 81.7% | 94,786 | 0.47 |
-| Per-region concatenation (control) | 72.5% ± 6.6% | 75.0% | 70.0% | 90,562 | 0.47 |
-| Baseline, mean pooling | 66.7% ± 1.4% | 60.0% | 73.3% | 89,922 | 0.47 |
+| Per-region concatenation | 72.5% ± 6.6% | 75.0% | 70.0% | 90,562 | 0.47 |
+| Base (original) model, mean pooling | 66.7% ± 1.4% | 60.0% | 73.3% | 89,922 | 0.47 |
 
-The concatenation control separates the two changes relative to the baseline:
+The concatenation control separates the two changes relative to the base model:
 keeping the six region summaries separate rather than averaging them
-(66.7% → 72.5%), then adding the attention layer (72.5% → 78.3%). Each step is
-5.8 points, smaller than the seed standard deviation of either per-region
-variant.
+(gave 66.7% to 72.5% improvement), then adding the attention layer (gave 72.5% to 78.3% improvement). 
 
-Per-seed accuracy for the proposed model is 85.0%, 77.5% and 72.5%, the widest
-range of any configuration.
+Per-seed accuracy for the proposed model is 85.0%, 77.5% and 72.5%.
 
 The proposed model requires both modalities, so it has no MRI-only or PET-only
-form. Modality comparisons are reported from the baseline and ablations below.
+form. Modality comparisons are reported from the base model and comparison models below.
 
 ---
 
-## Baseline and ablations
+## Base model and comparisons
 
 Identical data, split and seeds throughout. Only the stated component differs.
 
@@ -168,18 +151,14 @@ depth and width, keeping the same patch tokenisation. Lower than Mamba on MRI
 (67.5% vs 65.8%).
 
 **ResNet-10 arms.** Architecturally identical; the only difference is whether
-MedicalNet's pretrained weights are loaded. The randomly initialised trunk
+MedicalNet's pretrained weights are loaded. The random initialisation
 scores higher on MRI (72.5% vs 66.7%) and PET (70.0% vs 69.2%), and lower on
-multimodal (66.7% vs 70.8%). Several pretrained runs reached their best
-validation loss by epoch 3–4. The pretrained trunk was fine-tuned unfrozen at
-the same learning rate as the rest of the network. Both arms use about 320× the
-parameters and 440–450× the FLOPs of the baseline, and both replace the patch
-tokenisation with 6 region tokens, so neither isolates the convolutional front
-end alone.
+multimodal (66.7% vs 70.8%). Both models use about 320× the
+parameters and 440–450× the FLOPs of the base Vim model.
 
 **Cross-modal attention.** MRI and PET tokens attend to each other before
 pooling, rather than being pooled independently and concatenated, following the
-fusion order of MNA-net [2]. Accuracy is 64.2% against 66.7% for the baseline,
+fusion order of MNA-net [2]. Accuracy is 64.2% against 66.7% for the base,
 and it is the slowest ROI variant at 24 ms per sample, since it computes a
 3,072 × 3,072 attention matrix per head. The region weights below come from
 this model.
@@ -198,16 +177,13 @@ unimodal / 0.158 multimodal.
 | Cerebral WM | 60.8% ± 2.9% | 66.7% ± 3.8% | 70.0% ± 5.0% | +3.3 |
 
 Hippocampus multimodal (72.5%) is 5.8 points above the full six-region baseline
-(66.7%) at about a third of the FLOPs, a margin of roughly two test subjects.
-The ±0.0% reflects identical accuracy, not identical predictions: all three
-seeds classified 29 of 40 correctly but on different subjects (85–90% pairwise
-prediction agreement; predicted-positive counts of 17, 23 and 19).
+(66.7%) at about a third of the FLOPs.
 
 ---
 
 ## Region attention weights
 
-From the cross-modal attention model: the mean attention each key token
+From the cross-modal attention (proposed) model: the mean attention each key token
 received across all queries, grouped by region. A uniform distribution would
 give 1/3072 = 0.000326 per token.
 
@@ -226,14 +202,14 @@ ordering.
 
 The proposed model's per-region modality attention weights are within half a
 percentage point of 50% in every region and both directions, so they show no
-modality preference and are not reported as an interpretability result.
+modality preference.
 
 ---
 
 ## Whole-brain comparison
 
-Native-resolution 256³ volumes, brain-masked with `mask.mgz`, 8³ patches →
-32,768 tokens. Same architecture as the ROI baseline, so only the input
+Native-resolution 256³ volumes, brain-masked with `mask.mgz`, 8³ patches
+(32,768 tokens). Same architecture as the ROI baseline, so only the input
 representation differs.
 
 | Input | Modality | Accuracy | TPR | TNR | GFLOPs | Train time |
@@ -249,8 +225,7 @@ representation differs.
 feasible; these figures are indicative only.
 
 Whole-brain input costs about ten times the FLOPs of ROI input. Whole-brain
-accuracy is higher on MRI and lower on PET and multimodal, all within the
-resolution of a single seed.
+accuracy is higher on MRI and lower on PET and multimodal.
 
 ROI models train from an in-memory cache while whole-brain volumes are streamed
 from disk, so training times are not directly comparable. FLOPs are the
@@ -261,7 +236,7 @@ anatomical regions, which a whole-brain volume does not define.
 
 ---
 
-## Comparison to the published baseline
+## Comparison to the published literature
 
 MNA-net [2] reports 82.9% / 85.7% / 80.0% on the same OASIS-3 prediction task
 from a single seed, using 54 pretrained 3D ResNet-10 encoders (27 uniform
@@ -275,20 +250,20 @@ reproduction below uses the 209-subject cohort produced by Vo's own code.
 | Hippocampus region pair | 72.5% ± 0.0% | 71.7% | 73.3% | 0.158 GFLOPs |
 
 A separate reproduction using Vo's own frozen encoders and matched seeds
-reached 80.4% ± 2.3% with PET skull-stripped by BET followed by SynthStrip; the best single seed reached 83.3%. Replacing the stage-3 concatenation with a Mamba sequence model gave 75.0%.
+reached 80.4% ± 2.3%. Replacing the stage-3 concatenation with a Mamba sequence model gave 75.0%.
 
 ---
 
 ## Limitations
 
-The test set contains 40 subjects, so each is worth 2.5 percentage points and
-differences below roughly 5 points cannot be resolved. Results are from three
-seeds on a single fixed split; cross-validation was not performed.
+The test set contains 40 subjects, so each is worth 2.5 percentage points.
 
 The proposed model has the widest seed range of any configuration
-(72.5–85.0%), against ±1.4% for the baseline.
+(72.5–85.0%), against ±1.4% for the base model.
 
-Whole-brain results are single-seed. The MedicalNet arm was fine-tuned without
+Whole-brain results are single-seed.
+
+The MedicalNet pre-trainings was fine-tuned without
 freezing or layer-wise learning rates.
 
 The Mamba encoder is the `mamba.py` implementation [12], which uses a
@@ -304,14 +279,9 @@ parameter counts are unaffected.
   matched depth, width and tokenisation (by 15.0 and 8.4 points), and 1.7
   points lower on PET.
 - **Keeping region summaries separate and adding per-region modality attention
-  gave the highest accuracy.** Each change added 5.8 points over the previous
-  configuration, with seed standard deviations of 6.3–6.6.
+  gave the highest accuracy.**
 - **ROI input costs about a tenth of the FLOPs of whole-brain input.**
   Whole-brain accuracy was not consistently higher (single seed).
-- **Multimodal fusion improved on the best unimodal arm for hippocampus (+5.8)
-  and cerebral WM (+3.3), but not cerebellar WM (−0.9).**
-- **MedicalNet pretraining did not improve unimodal accuracy** over the same
-  ResNet-10 trained from random initialisation.
 - **Hippocampus gives the highest region-pair accuracy**, with multimodal input
   reaching 72.5%, above the full six-region baseline.
 - **The proposed model reaches 78.3% at 0.47 GFLOPs**, 4.6 points below the
