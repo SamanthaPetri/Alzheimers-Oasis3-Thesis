@@ -182,9 +182,9 @@ forward pass, for a single subject. It counts three things:
 | Single ROI pair | 0.11 | 0.23 |
 | 3D CNN tokenisation | 0.20 | 0.41 |
 | Pretrained ResNet-10 tokenisation | 106.2 | 212.4 |
-| Early cross-modal attention | — | 3.15 |
-| Late per-region concatenation | — | 0.68 |
-| Late per-region attention (proposed) | — | 0.68 |
+| Early cross-modal attention | N/A | 3.15 |
+| Late per-region concatenation | N/A | 0.68 |
+| Late per-region attention (proposed) | N/A | 0.68 |
 
 ---
 
