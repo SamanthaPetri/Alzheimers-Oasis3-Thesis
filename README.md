@@ -181,29 +181,6 @@ Hippocampus multimodal (72.5%) is 5.8 points above the six-region initial model
 
 ---
 
-## Region attention weights
-
-**Proposed model — per-region modality attention.** At each region the MRI and
-PET summaries attend to each other, so each weight is the share one modality
-draws from the other. 50% means the region relies on both equally.
-
-| Region | MRI query to PET | PET query to MRI |
-|---|---|---|
-| L-Hippocampus | 50.0% | 49.8% |
-| R-Hippocampus | 50.4% | 49.5% |
-| L-Cerebellar-WM | 50.0% | 49.7% |
-| R-Cerebellar-WM | 49.9% | 49.9% |
-| L-Cerebral-WM | 50.4% | 49.7% |
-| R-Cerebral-WM | 50.3% | 50.0% |
-
-Every value is within half a percentage point of 50% in both directions, so
-the attention expresses no modality preference. The accuracy gain over
-concatenation therefore does not come from the model weighting one modality
-above the other at any region.
-
-
----
-
 ## Whole-brain comparison
 
 Native-resolution 256³ volumes, brain-masked with `mask.mgz`, 8³ patches
