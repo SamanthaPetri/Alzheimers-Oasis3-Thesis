@@ -1,9 +1,8 @@
 """
 qc_audit.py
 
-Audits all four caches for data-quality problems before the 201-subject
-cohort is finalised, so bad subjects are dropped once rather than
-discovered piecemeal.
+Audits caches for data-quality problems before the
+cohort is finalised, so bad subjects can be dropped
 
 Checks per subject:
 
@@ -39,7 +38,7 @@ WB_PET  = "E:/mamba_model/preprocessed_cache_wholebrain_native_pet_v3"    # {sub
 
 OUT_CSV = "D:/mamba_model/qc_report.csv"
 
-# ── Thresholds ────────────────────────────────────────────────
+# Thresholds
 MEAN_TOL      = 0.10     # |mean of nonzero| above this = z-scoring failed
 STD_MIN       = 1e-3     # region with less spread than this is constant
 BRAIN_FRAC_LO = 0.10     # whole-brain: less than 10% nonzero = failed mask
@@ -120,7 +119,7 @@ def check_wholebrain(path):
     return problems, detail
 
 
-# ── Run the audit ─────────────────────────────────────────────
+# Run
 rows = []
 for _, r in df.iterrows():
     sid, ses = str(r["subject_id"]).strip(), str(r["mri_session"]).strip()
@@ -148,7 +147,7 @@ for _, r in df.iterrows():
 qc = pd.DataFrame(rows)
 qc.to_csv(OUT_CSV, index=False)
 
-# ── Report ────────────────────────────────────────────────────
+# Report
 cols = ["roi_mri", "roi_pet", "wb_mri", "wb_pet"]
 qc["any_problem"] = qc[cols].apply(lambda r: any(v for v in r), axis=1)
 bad = qc[qc["any_problem"]]
