@@ -187,7 +187,7 @@ Hippocampus multimodal (72.5%) is 5.8 points above the six-region initial model
 PET summaries attend to each other, so each weight is the share one modality
 draws from the other. 50% means the region relies on both equally.
 
-| Region | MRI query → PET | PET query → MRI |
+| Region | MRI query to PET | PET query to MRI |
 |---|---|---|
 | L-Hippocampus | 50.0% | 49.8% |
 | R-Hippocampus | 50.4% | 49.5% |
